@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<script>
+    {% if messages %}
+        {% for message in messages %}
+            showNotification('{{ message }}', '{{ message.tags }}');
+        {% endfor %}
+    {% endif %}
+</script>
+    <h1>Confirm Delete</h1>
+    <p>Are you sure you want to delete "{{ task.title }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        <a href="{% url 'task_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+{% endblock %}

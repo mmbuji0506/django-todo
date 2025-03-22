@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<script>
+    {% if messages %}
+        {% for message in messages %}
+            showNotification('{{ message }}', '{{ message.tags }}');
+        {% endfor %}
+    {% endif %}
+</script>
+    <h1>Tasks</h1>
+
+    <form method="get">
+        <input type="text" name="search" placeholder="Search tasks...">
+        <select name="priority">
+            <option value="">All Priorities</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+        </select>
+        <select name="status">
+            <option value="">All Statuses</option>
+            <option value="pending">Pending</option>
+            <option value="in_progress">In Progress</option>
+            <option value="completed">Completed</option>
+        </select>
+        <select name="sort_by">
+            <option value="">Sort by Due Date</option>
+            <option value="title">Sort by Title</option>
+            <option value="priority">Sort by Priority</option>
+            <option value="status">Sort by Status</option>
+        </select>
+        <button type="submit">Filter/Sort/Search</button>
+    </form>
+
+    <ul id="task-list">
+        {% for task in tasks %}
+            <li>
+                <a href="{% url 'task_update' task.pk %}">{{ task.title }}</a> - {{ task.due_date }} - {{ task.priority }} - {{ task.status }} - {{task.category}} {% if task.due_soon %} - Task due soon! {% endif %}
+                {% if task.priority == "high" %} <span class="badge badge-danger">High</span> {% elif task.priority == "medium" %} <span class="badge badge-warning">Medium</span> {% else %} <span class="badge badge-success">Low</span> {% endif %} -
+                {% if task.status == "pending" %} <span class="badge badge-secondary">Pending</span> {% elif task.status == "in_progress" %} <span class="badge badge-info">In Progress</span> {% else %} <span class="badge badge-success">Completed</span> {% endif %}
+                <a href="{% url 'task_delete' task.pk %}">Delete</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'task_create' %}">Create Task</a>
+{% endblock %}
+
+<script>
+    document.querySelectorAll('select, input[name="search"]').forEach(element => {
+        element.addEventListener('change', function() {
+            this.form.submit();
+        });
+    });
+</script>

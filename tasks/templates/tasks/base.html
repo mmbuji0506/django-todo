@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}To-Do{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            --bg-color: white;
+            --text-color: black;
+        }
+
+        body.dark-mode {
+            --bg-color: #333;
+            --text-color: white;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+    </style>
+</head>
+<body>
+    <div id="notification-container" style="position: fixed; top: 20px; right: 20px; z-index: 1000; display: none;"></div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="{% url 'task_list' %}">To-Do</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'task_list' %}">Tasks</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'task_create' %}">Create Task</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <span class="nav-link text-white">Welcome, {{ user.username }}</span>
+                    </li>
+                    <li class="nav-item">
+                        <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-link btn btn-link">Logout</button>
+                        </form>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'signup' %}">Register</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        {% block content %}
+        {% endblock %}
+    </div>
+    <script>
+
+    function showNotification(message, type = 'info') {
+        const container = document.getElementById('notification-container');
+        const notification = document.createElement('div');
+        notification.className = `alert alert-${type}`;
+        notification.textContent = message;
+        container.appendChild(notification);
+        container.style.display = 'block';
+        setTimeout(() => {
+            notification.remove();
+            if (container.children.length === 0) {
+                container.style.display = 'none';
+            }
+        }, 5000); // Hide after 5 seconds
+    }
+
+</script>
+
+<button id="darkModeToggle">Toggle Dark Mode</button>
+    <script>
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const body = document.body;
+
+        darkModeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+        });
+    </script>
+
+    <script>
+        const sessionTimeout = {{ request.session.get_expiry_age }} * 1000; // in milliseconds
+        const warningTime = 30000; // 30 seconds before timeout
+    
+        let timeoutWarningShown = false;
+    
+        function showTimeoutWarning() {
+            if (!timeoutWarningShown) {
+                alert('Your session is about to expire.');
+                timeoutWarningShown = true;
+            }
+        }
+    
+        setTimeout(() => {
+            showTimeoutWarning();
+        }, sessionTimeout - warningTime);
+    
+        function resetSessionTimer() {
+            fetch('/tasks/extend_session/'); // Extend session on user activity
+        }
+    
+        document.addEventListener('mousemove', resetSessionTimer);
+        document.addEventListener('keypress', resetSessionTimer);
+    </script>
+
+    <footer class="mt-4 bg-light text-center py-3">
+        <p>&copy; {% now "Y" %} Crefted with ❤️ by Josam Eneza Mmbuji.</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

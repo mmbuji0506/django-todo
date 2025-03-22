@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Login</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {% if field.name == 'password' %}
+                    <div class="input-group">
+                        {{ field }}
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <input type="checkbox" id="togglePassword">
+                            </span>
+                        </div>
+                    </div>
+                {% else %}
+                    {{ field }}
+                {% endif %}
+                {% if field.errors %}
+                    <small class="text-danger">{{ field.errors|striptags }}</small>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+    <p>Don't have an account? <a href="{% url 'signup' %}">Sign up</a></p>
+
+    <script>
+        const passwordInput = document.getElementById('id_password');
+        const togglePassword = document.getElementById('togglePassword');
+
+        if (togglePassword && passwordInput) {
+            togglePassword.addEventListener('change', function() {
+                passwordInput.type = this.checked ? 'text' : 'password';
+            });
+        }
+    </script>
+{% endblock %}
