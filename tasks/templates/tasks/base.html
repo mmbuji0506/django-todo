@@ -38,6 +38,15 @@
                     <a class="nav-link" href="{% url 'task_create' %}">Create Task</a>
                 </li>
             </ul>
+            <button id="darkModeToggle">Dark Mode</button>
+            <script>
+                const darkModeToggle = document.getElementById('darkModeToggle');
+                const body = document.body;
+        
+                darkModeToggle.addEventListener('click', () => {
+                    body.classList.toggle('dark-mode');
+                });
+            </script>        
             <ul class="navbar-nav">
                 {% if user.is_authenticated %}
                     <li class="nav-item">
@@ -83,16 +92,6 @@
     }
 
 </script>
-
-<button id="darkModeToggle">Toggle Dark Mode</button>
-    <script>
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        const body = document.body;
-
-        darkModeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-        });
-    </script>
 
     <script>
         const sessionTimeout = {{ request.session.get_expiry_age }} * 1000; // in milliseconds
