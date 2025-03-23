@@ -1,6 +1,68 @@
 {% extends 'base.html' %}
+
 {% block content %}
-    <h1>Welcome to the To-Do List!</h1>
-    <p>Manage your tasks efficiently.</p>
-    <a href="{% url 'task_list' %}">View Tasks</a>
+<div class="container py-5">
+    <div class="row justify-content-center text-center">
+        <div class="col-lg-8 col-md-10">
+            <h1 class="display-4 fw-bold mb-3" style="color: var(--text-color); animation: fadeInUp 0.8s ease-in-out;">
+                Welcome to Your To-Do List!
+            </h1>
+            <p class="lead mb-4" style="color: var(--text-color); animation: fadeInUp 1s ease-in-out;">
+                Manage your tasks efficiently with a sleek and modern experience.
+            </p>
+            <a href="{% url 'task_list' %}" class="btn btn-lg" style="background: var(--btn-gradient); color: #fff; border: none; padding: 0.75rem 2rem; border-radius: 25px; font-weight: 600; transition: var(--transition); animation: fadeInUp 1.2s ease-in-out;">
+                View Tasks
+            </a>
+        </div>
+    </div>
+
+    <!-- Optional: Add a subtle hero section or feature cards -->
+    <div class="row mt-5 g-4 justify-content-center">
+        <div class="col-md-4">
+            <div class="card h-100 text-center shadow-sm" style="background: var(--footer-bg); border: none; border-radius: 15px; transition: var(--transition);">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold" style="color: var(--accent-color);">Organize</h5>
+                    <p class="card-text" style="color: var(--text-color);">Keep your tasks in one place with ease.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 text-center shadow-sm" style="background: var(--footer-bg); border: none; border-radius: 15px; transition: var(--transition);">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold" style="color: var(--accent-color);">Prioritize</h5>
+                    <p class="card-text" style="color: var(--text-color);">Focus on what matters most.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 text-center shadow-sm" style="background: var(--footer-bg); border: none; border-radius: 15px; transition: var(--transition);">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold" style="color: var(--accent-color);">Succeed</h5>
+                    <p class="card-text" style="color: var(--text-color);">Achieve your goals effortlessly.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow);
+    }
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+        .display-4 {
+            font-size: 2.5rem;
+        }
+        .lead {
+            font-size: 1rem;
+        }
+    }
+</style>
 {% endblock %}

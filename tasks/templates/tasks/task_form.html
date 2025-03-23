@@ -1,5 +1,105 @@
 {% extends 'base.html' %}
+
 {% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card shadow-sm" style="background: var(--footer-bg); border: none; border-radius: 15px; animation: fadeInUp 0.5s ease-in-out;">
+                <div class="card-body">
+                    <h1 class="fw-bold mb-4 text-center" style="color: var(--text-color); font-size: 2rem;">
+                        {% if form.instance.pk %}Update Task{% else %}Create Task{% endif %}
+                    </h1>
+                    <form method="post" class="form">
+                        {% csrf_token %}
+                        <div class="form-group mb-4">
+                            {% for field in form %}
+                                <div class="mb-3">
+                                    <label for="{{ field.id_for_label }}" class="form-label fw-semibold" style="color: var(--text-color);">
+                                        {{ field.label }}:
+                                    </label>
+                                    {% if field.name == 'due_date' %}
+                                        <div class="input-group">
+                                            {{ field }}
+                                            <span class="input-group-text" style="background: var(--bg-color); border: 1px solid #ced4da; border-radius: 0 10px 10px 0;">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar" viewBox="0 0 16 16">
+                                                    <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                                                    <path d="M4 6a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 6z"/>
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    {% elif field.name == 'priority' or field.name == 'status' %}
+                                        {{ field }}
+                                    {% else %}
+                                        {{ field }}
+                                    {% endif %}
+                                    {% if field.errors %}
+                                        <small class="text-danger">{{ field.errors|striptags }}</small>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="d-flex justify-content-center gap-3">
+                            <button type="submit" class="btn btn-primary" style="background: var(--btn-gradient); border: none; padding: 0.75rem 2rem; border-radius: 25px; font-weight: 600; transition: var(--transition);">
+                                Save
+                            </button>
+                            <a href="{% url 'task_list' %}" class="btn btn-secondary" style="background: linear-gradient(135deg, #6c757d, #495057); color: #fff; border: none; padding: 0.75rem 2rem; border-radius: 25px; font-weight: 600; transition: var(--transition);">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-group label {
+        font-weight: 600;
+        color: var(--text-color);
+    }
+
+    .form-group input, .form-group select, .form-group textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ced4da;
+        border-radius: 10px;
+        background: var(--bg-color);
+        color: var(--text-color);
+        transition: var(--transition);
+    }
+
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+        border-color: var(--accent-color);
+        box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+        outline: none;
+    }
+
+    .input-group input {
+        border-radius: 10px 0 0 10px;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+    }
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 576px) {
+        .btn {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+        .d-flex {
+            flex-direction: column;
+            gap: 0.5rem !important;
+        }
+    }
+</style>
 
 <script>
     {% if messages %}
@@ -8,13 +108,4 @@
         {% endfor %}
     {% endif %}
 </script>
-    <h1>{% if form.instance.pk %}Update Task{% else %}Create Task{% endif %}</h1>
-    <form method="post" class="form">
-        {% csrf_token %}
-        <div class="form-group">
-            {{ form.as_p }}
-        </div>
-        <button type="submit" class="btn btn-primary">Save</button>
-        <a href="{% url 'task_list' %}" class="btn btn-secondary">Cancel</a>
-    </form>
 {% endblock %}

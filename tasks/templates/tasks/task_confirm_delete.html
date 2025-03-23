@@ -1,5 +1,52 @@
 {% extends 'base.html' %}
+
 {% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card shadow-sm" style="background: var(--footer-bg); border: none; border-radius: 15px; animation: fadeInUp 0.5s ease-in-out;">
+                <div class="card-body text-center">
+                    <h1 class="fw-bold mb-4" style="color: var(--text-color); font-size: 2rem;">Confirm Delete</h1>
+                    <p class="lead mb-4" style="color: var(--text-color);">
+                        Are you sure you want to delete "<strong>{{ task.title }}</strong>"?
+                    </p>
+                    <form method="post" class="d-flex justify-content-center gap-3">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" style="background: linear-gradient(135deg, #e63946, #d00000); border: none; padding: 0.75rem 2rem; border-radius: 25px; font-weight: 600; transition: var(--transition);">
+                            Yes, Delete
+                        </button>
+                        <a href="{% url 'task_list' %}" class="btn btn-secondary" style="background: linear-gradient(135deg, #6c757d, #495057); color: #fff; border: none; padding: 0.75rem 2rem; border-radius: 25px; font-weight: 600; transition: var(--transition);">
+                            Cancel
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+    }
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 576px) {
+        .btn {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+        .d-flex {
+            flex-direction: column;
+            gap: 0.5rem !important;
+        }
+    }
+</style>
 
 <script>
     {% if messages %}
@@ -8,11 +55,4 @@
         {% endfor %}
     {% endif %}
 </script>
-    <h1>Confirm Delete</h1>
-    <p>Are you sure you want to delete "{{ task.title }}"?</p>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Yes, Delete</button>
-        <a href="{% url 'task_list' %}" class="btn btn-secondary">Cancel</a>
-    </form>
 {% endblock %}

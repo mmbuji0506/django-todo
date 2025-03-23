@@ -1,43 +1,99 @@
 {% extends 'base.html' %}
+
 {% block content %}
-    <h2>Sign up</h2>
-    <form method="post">
-        {% csrf_token %}
-        {% for field in form %}
-            <div class="form-group">
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {% if field.name == 'password' or field.name == 'password2' %}
-                    <div class="input-group">
-                        {{ field }}
-                        <div class="input-group-append">
-                            <span class="input-group-text">
-                                <input type="checkbox" id="togglePassword_{{ field.name }}">
-                            </span>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7">
+            <div class="card shadow-sm" style="background: var(--footer-bg); border: none; border-radius: 15px; animation: fadeInUp 0.5s ease-in-out;">
+                <div class="card-body">
+                    <h2 class="fw-bold mb-4 text-center" style="color: var(--text-color); font-size: 2rem;">Sign Up</h2>
+                    <form method="post">
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <div class="form-group mb-4">
+                                <label for="{{ field.id_for_label }}" class="form-label fw-semibold" style="color: var(--text-color);">
+                                    {{ field.label }}
+                                </label>
+                                {% if field.name == 'password' or field.name == 'password2' %}
+                                    <div class="input-group">
+                                        {{ field }}
+                                        <span class="input-group-text" style="background: var(--bg-color); border: 1px solid #ced4da; border-radius: 0 10px 10px 0;">
+                                            <input type="checkbox" id="togglePassword_{{ field.name }}" style="cursor: pointer;">
+                                        </span>
+                                    </div>
+                                {% else %}
+                                    {{ field }}
+                                {% endif %}
+                                {% if field.errors %}
+                                    <small class="text-danger">{{ field.errors|striptags }}</small>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                        <div class="d-flex justify-content-center">
+                            <button type="submit" class="btn btn-lg" style="background: var(--btn-gradient); color: #fff; border: none; padding: 0.75rem 2rem; border-radius: 25px; font-weight: 600; transition: var(--transition);">
+                                Sign Up
+                            </button>
                         </div>
-                    </div>
-                {% else %}
-                    {{ field }}
-                {% endif %}
-                {% if field.errors %}
-                    <small class="text-danger">{{ field.errors|striptags }}</small>
-                {% endif %}
+                    </form>
+                    <p class="text-center mt-3" style="color: var(--text-color);">
+                        Already have an account? <a href="{% url 'login' %}" style="color: var(--accent-color); text-decoration: none; font-weight: 600;">Login</a>
+                    </p>
+                </div>
             </div>
-        {% endfor %}
-        <button type="submit" class="btn btn-primary">Sign up</button>
-    </form>
+        </div>
+    </div>
+</div>
 
-    <script>
-        {% for field in form %}
-            {% if field.name == 'password' or field.name == 'password2' %}
-                const passwordInput_{{ field.name }} = document.getElementById('id_{{ field.name }}');
-                const togglePassword_{{ field.name }} = document.getElementById('togglePassword_{{ field.name }}');
+<style>
+    .form-group input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ced4da;
+        border-radius: 10px;
+        background: var(--bg-color);
+        color: var(--text-color);
+        transition: var(--transition);
+    }
 
-                if (togglePassword_{{ field.name }} && passwordInput_{{ field.name }}) {
-                    togglePassword_{{ field.name }}.addEventListener('change', function() {
-                        passwordInput_{{ field.name }}.type = this.checked ? 'text' : 'password';
-                    });
-                }
-            {% endif %}
-        {% endfor %}
-    </script>
+    .form-group input:focus {
+        border-color: var(--accent-color);
+        box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+        outline: none;
+    }
+
+    .input-group input {
+        border-radius: 10px 0 0 10px;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+    }
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 576px) {
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<script>
+    {% for field in form %}
+        {% if field.name == 'password' or field.name == 'password2' %}
+            const passwordInput_{{ field.name }} = document.getElementById('id_{{ field.name }}');
+            const togglePassword_{{ field.name }} = document.getElementById('togglePassword_{{ field.name }}');
+
+            if (togglePassword_{{ field.name }} && passwordInput_{{ field.name }}) {
+                togglePassword_{{ field.name }}.addEventListener('change', function() {
+                    passwordInput_{{ field.name }}.type = this.checked ? 'text' : 'password';
+                });
+            }
+        {% endif %}
+    {% endfor %}
+</script>
 {% endblock %}
