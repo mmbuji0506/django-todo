@@ -1,22 +1,26 @@
 {% extends 'base.html' %}
 
+{% block title %}Delete Task - Modern To-Do{% endblock %}
+
 {% block content %}
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-lg-6 col-md-8">
-            <div class="card shadow-sm" style="background: var(--footer-bg); border: none; border-radius: 15px; animation: fadeInUp 0.5s ease-in-out;">
+            <div class="card shadow-sm" style="background: var(--card-bg); color: var(--card-text); border: none; border-radius: 15px; animation: fadeInUp 0.5s ease-in-out;">
                 <div class="card-body text-center">
-                    <h1 class="fw-bold mb-4" style="color: var(--text-color); font-size: 2rem;">Confirm Delete</h1>
-                    <p class="lead mb-4" style="color: var(--text-color);">
+                    <h1 class="fw-bold mb-3" style="color: var(--text-color); font-size: 2rem;">Confirm Delete</h1>
+                    <button id="read-confirmation" class="btn btn-narrator mb-3"><i class="fas fa-headphones me-2"></i>Hear Confirmation</button>
+                    <p class="lead mb-4" style="color: var(--card-text);">
+                        <i class="fas fa-exclamation-triangle text-warning me-2"></i>
                         Are you sure you want to delete "<strong>{{ task.title }}</strong>"?
                     </p>
                     <form method="post" class="d-flex justify-content-center gap-3">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-danger" style="background: linear-gradient(135deg, #e63946, #d00000); border: none; padding: 0.75rem 2rem; border-radius: 25px; font-weight: 600; transition: var(--transition);">
-                            Yes, Delete
+                            <i class="fas fa-trash-alt me-2"></i>Yes, Delete
                         </button>
                         <a href="{% url 'task_list' %}" class="btn btn-secondary" style="background: linear-gradient(135deg, #6c757d, #495057); color: #fff; border: none; padding: 0.75rem 2rem; border-radius: 25px; font-weight: 600; transition: var(--transition);">
-                            Cancel
+                            <i class="fas fa-times me-2"></i>Cancel
                         </a>
                     </form>
                 </div>
@@ -26,14 +30,33 @@
 </div>
 
 <style>
+    .btn-narrator {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        font-weight: 600;
+        color: var(--card-text);
+        transition: var(--transition);
+    }
+
+    .dark-mode .btn-narrator {
+        background: rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-narrator:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    .dark-mode .btn-narrator:hover {
+        background: rgba(0, 0, 0, 0.3);
+    }
+
     .btn:hover {
         transform: translateY(-2px);
         box-shadow: var(--shadow);
-    }
-
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
     }
 
     @media (max-width: 576px) {
@@ -45,14 +68,51 @@
             flex-direction: column;
             gap: 0.5rem !important;
         }
+        .lead {
+            font-size: 1rem;
+        }
     }
 </style>
 
 <script>
+    // Show notifications if any
     {% if messages %}
         {% for message in messages %}
             showNotification('{{ message }}', '{{ message.tags }}');
         {% endfor %}
     {% endif %}
+
+    // Narrator for Confirmation
+    document.addEventListener("DOMContentLoaded", function() {
+        const readConfirmationButton = document.getElementById("read-confirmation");
+        if (readConfirmationButton) {
+            readConfirmationButton.addEventListener("click", function() {
+                readConfirmationMessage();
+            });
+        }
+    });
+
+    function readConfirmationMessage() {
+        const title = document.querySelector('h1')?.innerText;
+        const message = document.querySelector('.lead')?.innerText;
+        const narrationText = `${title}. ${message} Press Yes, Delete to confirm, or Cancel to go back.`;
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const speech = new SpeechSynthesisUtterance(narrationText);
+            speech.lang = "en-US";
+            speech.rate = 1.0;
+            speech.pitch = 1.0;
+            const voices = window.speechSynthesis.getVoices();
+            speech.voice = voices.find(voice => voice.lang === "en-US") || voices[0];
+            window.speechSynthesis.speak(speech);
+        } else {
+            alert("Text-to-Speech is not supported in this browser.");
+        }
+    }
+
+    window.speechSynthesis.onvoiceschanged = function() {
+        const voices = window.speechSynthesis.getVoices();
+    };
 </script>
 {% endblock %}

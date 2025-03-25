@@ -1,44 +1,73 @@
 {% extends 'base.html' %}
 
+{% block title %}Tasks - Modern To-Do{% endblock %}
+
 {% block content %}
 <div class="container py-5">
-    <h1 class="fw-bold mb-4 text-center" style="color: var(--text-color); font-size: 2.5rem; animation: fadeInUp 0.5s ease-in-out;">
-        Your Tasks
-    </h1>
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="fw-bold text-center text-md-start" style="color: var(--text-color); font-size: 2.5rem; animation: fadeInUp 0.5s ease-in-out;">
+                Your Tasks
+            </h1>
+        </div>
+        <div class="col-md-4 text-center text-md-end">
+            <button id="read-task-list" class="btn btn-narrator"><i class="fas fa-headphones me-2"></i>Hear Task List</button>
+        </div>
+    </div>
 
     <!-- Filter/Search Form -->
-    <div class="card shadow-sm mb-5" style="background: var(--footer-bg); border: none; border-radius: 15px; animation: fadeInUp 0.7s ease-in-out;">
+    <div class="card shadow-sm mb-5" style="background: var(--card-bg); color: var(--card-text); border: none; border-radius: 15px; animation: fadeInUp 0.7s ease-in-out;">
         <div class="card-body">
             <form method="get" class="d-flex flex-wrap gap-3 justify-content-center align-items-end">
                 <div class="form-group">
-                    <input type="text" name="search" value="{{ request.GET.search }}" placeholder="Search tasks..." class="form-control" style="border-radius: 10px; padding: 0.75rem; transition: var(--transition);">
+                    <div class="input-group">
+                        <span class="input-group-text" style="background: var(--card-bg); color: var(--card-text); border: 1px solid #ced4da; border-radius: 10px 0 0 10px;">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input type="text" name="search" value="{{ request.GET.search }}" placeholder="Search tasks..." class="form-control" style="border-radius: 0 10px 10px 0;">
+                    </div>
                 </div>
                 <div class="form-group">
-                    <select name="priority" class="form-select" style="border-radius: 10px; padding: 0.75rem; transition: var(--transition);">
-                        <option value="" {% if not request.GET.priority %}selected{% endif %}>All Priorities</option>
-                        <option value="low" {% if request.GET.priority == "low" %}selected{% endif %}>Low</option>
-                        <option value="medium" {% if request.GET.priority == "medium" %}selected{% endif %}>Medium</option>
-                        <option value="high" {% if request.GET.priority == "high" %}selected{% endif %}>High</option>
-                    </select>
+                    <div class="input-group">
+                        <span class="input-group-text" style="background: var(--card-bg); color: var(--card-text); border: 1px solid #ced4da; border-radius: 10px 0 0 10px;">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </span>
+                        <select name="priority" class="form-select" style="border-radius: 0 10px 10px 0;">
+                            <option value="" {% if not request.GET.priority %}selected{% endif %}>All Priorities</option>
+                            <option value="low" {% if request.GET.priority == "low" %}selected{% endif %}>Low</option>
+                            <option value="medium" {% if request.GET.priority == "medium" %}selected{% endif %}>Medium</option>
+                            <option value="high" {% if request.GET.priority == "high" %}selected{% endif %}>High</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <select name="status" class="form-select" style="border-radius: 10px; padding: 0.75rem; transition: var(--transition);">
-                        <option value="" {% if not request.GET.status %}selected{% endif %}>All Statuses</option>
-                        <option value="pending" {% if request.GET.status == "pending" %}selected{% endif %}>Pending</option>
-                        <option value="in_progress" {% if request.GET.status == "in_progress" %}selected{% endif %}>In Progress</option>
-                        <option value="completed" {% if request.GET.status == "completed" %}selected{% endif %}>Completed</option>
-                    </select>
+                    <div class="input-group">
+                        <span class="input-group-text" style="background: var(--card-bg); color: var(--card-text); border: 1px solid #ced4da; border-radius: 10px 0 0 10px;">
+                            <i class="fas fa-tasks"></i>
+                        </span>
+                        <select name="status" class="form-select" style="border-radius: 0 10px 10px 0;">
+                            <option value="" {% if not request.GET.status %}selected{% endif %}>All Statuses</option>
+                            <option value="pending" {% if request.GET.status == "pending" %}selected{% endif %}>Pending</option>
+                            <option value="in_progress" {% if request.GET.status == "in_progress" %}selected{% endif %}>In Progress</option>
+                            <option value="completed" {% if request.GET.status == "completed" %}selected{% endif %}>Completed</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <select name="sort_by" class="form-select" style="border-radius: 10px; padding: 0.75rem; transition: var(--transition);">
-                        <option value="" {% if not request.GET.sort_by %}selected{% endif %}>Sort by Due Date</option>
-                        <option value="title" {% if request.GET.sort_by == "title" %}selected{% endif %}>Sort by Title</option>
-                        <option value="priority" {% if request.GET.sort_by == "priority" %}selected{% endif %}>Sort by Priority</option>
-                        <option value="status" {% if request.GET.sort_by == "status" %}selected{% endif %}>Sort by Status</option>
-                    </select>
+                    <div class="input-group">
+                        <span class="input-group-text" style="background: var(--card-bg); color: var(--card-text); border: 1px solid #ced4da; border-radius: 10px 0 0 10px;">
+                            <i class="fas fa-sort"></i>
+                        </span>
+                        <select name="sort_by" class="form-select" style="border-radius: 0 10px 10px 0;">
+                            <option value="" {% if not request.GET.sort_by %}selected{% endif %}>Sort by Due Date</option>
+                            <option value="title" {% if request.GET.sort_by == "title" %}selected{% endif %}>Sort by Title</option>
+                            <option value="priority" {% if request.GET.sort_by == "priority" %}selected{% endif %}>Sort by Priority</option>
+                            <option value="status" {% if request.GET.sort_by == "status" %}selected{% endif %}>Sort by Status</option>
+                        </select>
+                    </div>
                 </div>
                 <button type="submit" class="btn" style="background: var(--btn-gradient); color: #fff; border: none; padding: 0.75rem 2rem; border-radius: 25px; font-weight: 600; transition: var(--transition);">
-                    Filter
+                    <i class="fas fa-filter me-2"></i>Filter
                 </button>
             </form>
         </div>
@@ -48,15 +77,17 @@
     <div class="row g-4">
         {% for task in tasks %}
             <div class="col-lg-4 col-md-6">
-                <div class="card h-100 shadow-sm" style="background: var(--footer-bg); border: none; border-radius: 15px; transition: var(--transition); animation: fadeInUp 0.5s ease-in-out;">
+                <div class="card h-100 shadow-sm" style="background: var(--card-bg); color: var(--card-text); border: none; border-radius: 15px; transition: var(--transition); animation: fadeInUp 0.5s ease-in-out;">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title fw-bold" style="color: var(--accent-color);">
                             <a href="{% url 'task_update' task.pk %}" style="color: inherit; text-decoration: none;">{{ task.title }}</a>
                         </h5>
-                        <p class="card-text mb-2" style="color: var(--text-color);">
+                        <p class="card-text mb-2" style="color: var(--card-text);">
+                            <i class="fas fa-calendar-alt me-2"></i>
                             <strong>Due:</strong> {{ task.due_date }} {% if task.due_soon %}<span class="text-danger"> - Due soon!</span>{% endif %}
                         </p>
-                        <p class="card-text mb-2" style="color: var(--text-color);">
+                        <p class="card-text mb-2" style="color: var(--card-text);">
+                            <i class="fas fa-exclamation-circle me-2"></i>
                             <strong>Priority:</strong>
                             {% if task.priority == "high" %}
                                 <span class="badge bg-danger">High</span>
@@ -66,7 +97,8 @@
                                 <span class="badge bg-success">Low</span>
                             {% endif %}
                         </p>
-                        <p class="card-text mb-2" style="color: var(--text-color);">
+                        <p class="card-text mb-2" style="color: var(--card-text);">
+                            <i class="fas fa-tasks me-2"></i>
                             <strong>Status:</strong>
                             {% if task.status == "pending" %}
                                 <span class="badge bg-secondary">Pending</span>
@@ -76,12 +108,13 @@
                                 <span class="badge bg-success">Completed</span>
                             {% endif %}
                         </p>
-                        <p class="card-text mb-3" style="color: var(--text-color);">
+                        <p class="card-text mb-3" style="color: var(--card-text);">
+                            <i class="fas fa-tag me-2"></i>
                             <strong>Category:</strong> {{ task.category|default:"None" }}
                         </p>
                         <div class="mt-auto d-flex justify-content-end">
                             <a href="{% url 'task_delete' task.pk %}" class="btn btn-sm" style="background: linear-gradient(135deg, #e63946, #d00000); color: #fff; border: none; padding: 0.5rem 1.5rem; border-radius: 20px; font-weight: 600; transition: var(--transition);">
-                                Delete
+                                <i class="fas fa-trash-alt me-2"></i>Delete
                             </a>
                         </div>
                     </div>
@@ -89,23 +122,98 @@
             </div>
         {% empty %}
             <div class="col-12 text-center">
-                <p class="lead" style="color: var(--text-color);">No tasks found. Create one to get started!</p>
+                <p class="lead" style="color: var(--card-text); animation: fadeInUp 0.5s ease-in-out;">
+                    No tasks found. Create one to get started!
+                </p>
             </div>
         {% endfor %}
     </div>
 
+    <!-- Pagination -->
+    {% if tasks.paginator.num_pages > 1 %}
+        <nav aria-label="Page navigation" class="mt-5">
+            <ul class="pagination justify-content-center">
+                {% if tasks.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ tasks.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.priority %}&priority={{ request.GET.priority }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.sort_by %}&sort_by={{ request.GET.sort_by }}{% endif %}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">&laquo;</span>
+                    </li>
+                {% endif %}
+
+                {% for num in tasks.paginator.page_range %}
+                    <li class="page-item {% if tasks.number == num %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.priority %}&priority={{ request.GET.priority }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.sort_by %}&sort_by={{ request.GET.sort_by }}{% endif %}">{{ num }}</a>
+                    </li>
+                {% endfor %}
+
+                {% if tasks.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ tasks.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.priority %}&priority={{ request.GET.priority }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.sort_by %}&sort_by={{ request.GET.sort_by }}{% endif %}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">&raquo;</span>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+
     <!-- Create Task Button -->
     <div class="text-center mt-5">
         <a href="{% url 'task_create' %}" class="btn btn-lg" style="background: var(--btn-gradient); color: #fff; border: none; padding: 0.75rem 2rem; border-radius: 25px; font-weight: 600; transition: var(--transition);">
-            Create New Task
+            <i class="fas fa-plus-circle me-2"></i>Create New Task
         </a>
     </div>
 </div>
 
 <style>
+    .btn-narrator {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        font-weight: 600;
+        color: var(--card-text);
+        transition: var(--transition);
+    }
+
+    .dark-mode .btn-narrator {
+        background: rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-narrator:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    .dark-mode .btn-narrator:hover {
+        background: rgba(0, 0, 0, 0.3);
+    }
+
+    .form-control, .form-select {
+        padding: 0.75rem;
+        border: 1px solid #ced4da;
+        background: var(--card-bg);
+        color: var(--card-text);
+        transition: var(--transition);
+    }
+
+    .dark-mode .form-control, .dark-mode .form-select {
+        border-color: #444;
+    }
+
     .form-control:focus, .form-select:focus {
         border-color: var(--accent-color);
-        box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+        box-shadow: 0 0 5px rgba(255, 107, 107, 0.5);
         outline: none;
     }
 
@@ -124,9 +232,30 @@
         padding: 0.4em 0.8em;
     }
 
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
+    .page-link {
+        color: var(--accent-color);
+        border: 1px solid #dee2e6;
+        transition: var(--transition);
+    }
+
+    .dark-mode .page-link {
+        color: #ff2d55;
+        border-color: #444;
+    }
+
+    .page-item.active .page-link {
+        background-color: var(--accent-color);
+        border-color: var(--accent-color);
+        color: #fff;
+    }
+
+    .dark-mode .page-item.active .page-link {
+        background-color: #ff2d55;
+        border-color: #ff2d55;
+    }
+
+    .page-item.disabled .page-link {
+        color: #6c757d;
     }
 
     @media (max-width: 576px) {
@@ -137,20 +266,73 @@
             width: 100%;
             margin-bottom: 0.5rem;
         }
+        h1 {
+            font-size: 1.5rem;
+        }
     }
 </style>
 
 <script>
+    // Show notifications if any
     {% if messages %}
         {% for message in messages %}
             showNotification('{{ message }}', '{{ message.tags }}');
         {% endfor %}
     {% endif %}
 
+    // Auto-submit form on filter change
     document.querySelectorAll('select, input[name="search"]').forEach(element => {
         element.addEventListener('change', function() {
             this.form.submit();
         });
     });
+
+    // Narrator for Task List
+    document.addEventListener("DOMContentLoaded", function() {
+        const readTaskListButton = document.getElementById("read-task-list");
+        if (readTaskListButton) {
+            readTaskListButton.addEventListener("click", function() {
+                readTaskList();
+            });
+        }
+    });
+
+    function readTaskList() {
+        const title = document.querySelector('h1')?.innerText;
+        let narrationText = `${title}. `;
+        
+        const tasks = document.querySelectorAll('.card');
+        if (tasks.length === 0) {
+            narrationText += "No tasks found. Create one to get started.";
+        } else {
+            narrationText += `You have ${tasks.length} task${tasks.length === 1 ? '' : 's'}: `;
+            tasks.forEach((task, index) => {
+                const title = task.querySelector('.card-title a')?.innerText;
+                const due = task.querySelector('.card-text:nth-of-type(1)')?.innerText.replace('Due: ', '');
+                const priority = task.querySelector('.card-text:nth-of-type(2) .badge')?.innerText;
+                const status = task.querySelector('.card-text:nth-of-type(3) .badge')?.innerText;
+                narrationText += `${title}, due ${due}, priority ${priority}, status ${status}${index < tasks.length - 1 ? '; ' : '.'}`;
+            });
+        }
+
+        narrationText += " You can filter tasks by search, priority, status, or sort them. Press Create New Task to add a task.";
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const speech = new SpeechSynthesisUtterance(narrationText);
+            speech.lang = "en-US";
+            speech.rate = 1.0;
+            speech.pitch = 1.0;
+            const voices = window.speechSynthesis.getVoices();
+            speech.voice = voices.find(voice => voice.lang === "en-US") || voices[0];
+            window.speechSynthesis.speak(speech);
+        } else {
+            alert("Text-to-Speech is not supported in this browser.");
+        }
+    }
+
+    window.speechSynthesis.onvoiceschanged = function() {
+        const voices = window.speechSynthesis.getVoices();
+    };
 </script>
 {% endblock %}

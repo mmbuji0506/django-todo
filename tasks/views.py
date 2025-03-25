@@ -13,53 +13,41 @@ from .serializers import TaskSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib import messages
 from django.http import JsonResponse
+from django.core.paginator import Paginator
 
 
 def home(request):
     return render(request, 'tasks/home.html')
 
 def extend_session(request):
-    request.session.set_expiry(1200) #reset the session expiry.
+    request.session.set_expiry(1200)
     return JsonResponse({"status": "ok"})
 
 @login_required
 def task_list(request):
+    search_query = request.GET.get('search', '')
+    priority_filter = request.GET.get('priority', '')
+    status_filter = request.GET.get('status', '')
+    sort_by = request.GET.get('sort_by', '')
+
     tasks = Task.objects.filter(user=request.user)
+    if search_query:
+        tasks = tasks.filter(title__icontains=search_query)
+    if priority_filter:
+        tasks = tasks.filter(priority=priority_filter)
+    if status_filter:
+        tasks = tasks.filter(status=status_filter)
 
-    # Filtering
-    priority = request.GET.get('priority')
-    status = request.GET.get('status')
-
-    if priority:
-        tasks = tasks.filter(priority=priority)
-    if status:
-        tasks = tasks.filter(status=status)
-
-    # Sorting
-    sort_by = request.GET.get('sort_by')
     if sort_by:
         tasks = tasks.order_by(sort_by)
     else:
         tasks = tasks.order_by('due_date')
 
-    # Search
-    search_query = request.GET.get('search')
-    if search_query:
-        tasks = tasks.filter(Q(title__icontains=search_query) | Q(description__icontains=search_query))
+    paginator = Paginator(tasks, 9)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
-    category = request.GET.get('category')
-    if category:
-        tasks = tasks.filter(category=category)
-
-    for task in tasks:
-        if task.due_date:
-            time_difference = task.due_date - datetime.datetime.now(task.due_date.tzinfo)
-            if datetime.timedelta(hours=1) >= time_difference >= datetime.timedelta(minutes=0):
-                task.due_soon = True
-            else:
-                task.due_soon = False
-
-    return render(request, 'tasks/task_list.html', {'tasks': tasks})
+    return render(request, 'task_list.html', {'tasks': page_obj})
 
 @login_required
 def task_create(request):

@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% block title %}Home - Modern To-Do{% endblock %}
+
 {% block content %}
 <div class="container py-5">
     <div class="row justify-content-center text-center">
@@ -10,35 +12,43 @@
             <p class="lead mb-4" style="color: var(--text-color); animation: fadeInUp 1s ease-in-out;">
                 Manage your tasks efficiently with a sleek and modern experience.
             </p>
-            <a href="{% url 'task_list' %}" class="btn btn-lg" style="background: var(--btn-gradient); color: #fff; border: none; padding: 0.75rem 2rem; border-radius: 25px; font-weight: 600; transition: var(--transition); animation: fadeInUp 1.2s ease-in-out;">
-                View Tasks
-            </a>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{% url 'task_list' %}" class="btn btn-lg" style="background: var(--btn-gradient); color: #fff; border: none; padding: 0.75rem 2rem; border-radius: 25px; font-weight: 600; transition: var(--transition); animation: fadeInUp 1.2s ease-in-out;">
+                    <i class="fas fa-list me-2"></i>View Tasks
+                </a>
+                <button id="read-welcome" class="btn btn-lg btn-narrator" style="animation: fadeInUp 1.4s ease-in-out;">
+                    <i class="fas fa-headphones me-2"></i>Hear Welcome
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- Optional: Add a subtle hero section or feature cards -->
+    <!-- Feature Cards -->
     <div class="row mt-5 g-4 justify-content-center">
         <div class="col-md-4">
-            <div class="card h-100 text-center shadow-sm" style="background: var(--footer-bg); border: none; border-radius: 15px; transition: var(--transition);">
+            <div class="card h-100 text-center shadow-sm" style="background: var(--card-bg); color: var(--card-text); border: none; border-radius: 15px; transition: var(--transition);">
                 <div class="card-body">
+                    <i class="fas fa-sitemap fa-2x mb-3" style="color: var(--accent-color);"></i>
                     <h5 class="card-title fw-bold" style="color: var(--accent-color);">Organize</h5>
-                    <p class="card-text" style="color: var(--text-color);">Keep your tasks in one place with ease.</p>
+                    <p class="card-text" style="color: var(--card-text);">Keep your tasks in one place with ease.</p>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card h-100 text-center shadow-sm" style="background: var(--footer-bg); border: none; border-radius: 15px; transition: var(--transition);">
+            <div class="card h-100 text-center shadow-sm" style="background: var(--card-bg); color: var(--card-text); border: none; border-radius: 15px; transition: var(--transition);">
                 <div class="card-body">
+                    <i class="fas fa-star fa-2x mb-3" style="color: var(--accent-color);"></i>
                     <h5 class="card-title fw-bold" style="color: var(--accent-color);">Prioritize</h5>
-                    <p class="card-text" style="color: var(--text-color);">Focus on what matters most.</p>
+                    <p class="card-text" style="color: var(--card-text);">Focus on what matters most.</p>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card h-100 text-center shadow-sm" style="background: var(--footer-bg); border: none; border-radius: 15px; transition: var(--transition);">
+            <div class="card h-100 text-center shadow-sm" style="background: var(--card-bg); color: var(--card-text); border: none; border-radius: 15px; transition: var(--transition);">
                 <div class="card-body">
+                    <i class="fas fa-trophy fa-2x mb-3" style="color: var(--accent-color);"></i>
                     <h5 class="card-title fw-bold" style="color: var(--accent-color);">Succeed</h5>
-                    <p class="card-text" style="color: var(--text-color);">Achieve your goals effortlessly.</p>
+                    <p class="card-text" style="color: var(--card-text);">Achieve your goals effortlessly.</p>
                 </div>
             </div>
         </div>
@@ -46,14 +56,34 @@
 </div>
 
 <style>
+    .btn-narrator {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 25px;
+        font-weight: 600;
+        color: var(--text-color);
+        transition: var(--transition);
+    }
+
+    .dark-mode .btn-narrator {
+        background: rgba(0, 0, 0, 0.2);
+        color: var(--card-text);
+    }
+
+    .btn-narrator:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    .dark-mode .btn-narrator:hover {
+        background: rgba(0, 0, 0, 0.3);
+    }
+
     .card:hover {
         transform: translateY(-5px);
         box-shadow: var(--shadow);
-    }
-
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
     }
 
     @media (max-width: 768px) {
@@ -63,6 +93,51 @@
         .lead {
             font-size: 1rem;
         }
+        .btn-lg {
+            padding: 0.5rem 1.5rem;
+            font-size: 1rem;
+        }
     }
 </style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const readWelcomeButton = document.getElementById("read-welcome");
+        if (readWelcomeButton) {
+            readWelcomeButton.addEventListener("click", function() {
+                readWelcomeMessage();
+            });
+        }
+    });
+
+    function readWelcomeMessage() {
+        const title = document.querySelector('.display-4')?.innerText;
+        const lead = document.querySelector('.lead')?.innerText;
+        const cards = document.querySelectorAll('.card');
+        let narrationText = `${title} ${lead} Features: `;
+        
+        cards.forEach((card, index) => {
+            const title = card.querySelector('.card-title')?.innerText;
+            const text = card.querySelector('.card-text')?.innerText;
+            narrationText += `${title}: ${text}${index < cards.length - 1 ? '; ' : '.'}`;
+        });
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const speech = new SpeechSynthesisUtterance(narrationText);
+            speech.lang = "en-US";
+            speech.rate = 1.0;
+            speech.pitch = 1.0;
+            const voices = window.speechSynthesis.getVoices();
+            speech.voice = voices.find(voice => voice.lang === "en-US") || voices[0];
+            window.speechSynthesis.speak(speech);
+        } else {
+            alert("Text-to-Speech is not supported in this browser.");
+        }
+    }
+
+    window.speechSynthesis.onvoiceschanged = function() {
+        const voices = window.speechSynthesis.getVoices();
+    };
+</script>
 {% endblock %}

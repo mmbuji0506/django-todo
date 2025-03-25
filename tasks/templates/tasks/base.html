@@ -1,16 +1,25 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}To-Do{% endblock %}</title>
+    <title>{% block title %}Modern To-Do{% endblock %}</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-color: #ffffff;
-            --text-color: #212529;
-            --navbar-bg: #343a40;
-            --footer-bg: #f8f9fa;
+            --bg-color: #f5f7fa;
+            --text-color: #333;
+            --navbar-bg: #2c3e50;
+            --footer-bg: #ecf0f1;
+            --accent-color: #ff6b6b;
+            --btn-gradient: linear-gradient(45deg, #ff6b6b, #feca57);
+            --card-bg: #ffffff;
+            --card-text: #333;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s ease;
         }
 
@@ -19,11 +28,15 @@
             --text-color: #f8f9fa;
             --navbar-bg: #2c2c2c;
             --footer-bg: #343a40;
+            --card-bg: #2c2c2c;
+            --card-text: #f8f9fa;
+            --shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
+            font-family: 'Poppins', sans-serif;
             transition: var(--transition);
             min-height: 100vh;
             display: flex;
@@ -32,31 +45,98 @@
 
         .navbar {
             background-color: var(--navbar-bg);
+            box-shadow: var(--shadow);
             transition: var(--transition);
         }
 
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #fff !important;
+            transition: var(--transition);
+        }
+
+        .navbar-brand:hover {
+            color: var(--accent-color) !important;
+        }
+
+        .nav-link {
+            color: #fff !important;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--accent-color) !important;
+            transform: translateY(-2px);
+        }
+
         .btn-dark-mode {
-            background-color: #6c757d;
+            background: var(--btn-gradient);
             border: none;
-            padding: 0.375rem 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: 600;
+            color: #fff;
             transition: var(--transition);
         }
 
         .btn-dark-mode:hover {
-            background-color: #495057;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-narrator {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: 600;
+            color: #fff;
+            transition: var(--transition);
+        }
+
+        .btn-narrator:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
         }
 
         .container {
             flex: 1;
+            padding-top: 2rem;
         }
 
         footer {
             background-color: var(--footer-bg);
             transition: var(--transition);
+            padding: 2rem 0;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode footer {
+            box-shadow: 0 -4px 15px rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-text {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .social-links a {
+            color: var(--text-color);
+            margin: 0 0.5rem;
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            color: var(--accent-color);
         }
 
         .alert {
             margin-bottom: 0.5rem;
+            border-radius: 10px;
             animation: slideIn 0.5s ease-in-out;
         }
 
@@ -65,13 +145,28 @@
             to { transform: translateX(0); opacity: 1; }
         }
 
+        @keyframes fadeInUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
         @media (max-width: 576px) {
-            .navbar-brand, .nav-link {
+            .navbar-brand {
+                font-size: 1.2rem;
+            }
+            .nav-link {
                 font-size: 0.9rem;
             }
-            .btn-dark-mode {
+            .btn-dark-mode, .btn-narrator {
                 width: 100%;
                 margin-top: 0.5rem;
+                font-size: 0.9rem;
+            }
+            .footer-text {
+                font-size: 0.8rem;
+            }
+            .social-links a {
+                font-size: 1rem;
             }
         }
     </style>
@@ -81,37 +176,38 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{% url 'task_list' %}">To-Do</a>
+            <a class="navbar-brand" href="{% url 'task_list' %}"><i class="fas fa-tasks me-2"></i>Modern To-Do</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'task_list' %}">Tasks</a>
+                        <a class="nav-link" href="{% url 'task_list' %}"><i class="fas fa-list me-1"></i>Tasks</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'task_create' %}">Create Task</a>
+                        <a class="nav-link" href="{% url 'task_create' %}"><i class="fas fa-plus-circle me-1"></i>Create Task</a>
                     </li>
                 </ul>
-                <button id="darkModeToggle" class="btn btn-dark-mode me-3">Toggle Dark Mode</button>
+                <button id="readNav" class="btn btn-narrator me-2"><i class="fas fa-headphones"></i> Read Navigation</button>
+                <button id="darkModeToggle" class="btn btn-dark-mode me-3"><i class="fas fa-moon me-1"></i>Toggle Dark Mode</button>
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <span class="nav-link">Welcome, {{ user.username }}</span>
+                            <span class="nav-link"><i class="fas fa-user me-1"></i>Welcome, {{ user.username }}</span>
                         </li>
                         <li class="nav-item">
                             <form method="post" action="{% url 'logout' %}" class="d-inline">
                                 {% csrf_token %}
-                                <button type="submit" class="nav-link btn btn-link text-white">Logout</button>
+                                <button type="submit" class="nav-link btn btn-link text-white"><i class="fas fa-sign-out-alt me-1"></i>Logout</button>
                             </form>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">Login</a>
+                            <a class="nav-link" href="{% url 'login' %}"><i class="fas fa-sign-in-alt me-1"></i>Login</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'signup' %}">Register</a>
+                            <a class="nav-link" href="{% url 'signup' %}"><i class="fas fa-user-plus me-1"></i>Register</a>
                         </li>
                     {% endif %}
                 </ul>
@@ -124,18 +220,31 @@
     </div>
 
     <footer class="mt-4 text-center py-3">
-        <p>© {% now "Y" %} Crafted with ❤️ by Josam Eneza Mmbuji.</p>
+        <p class="footer-text">© {% now "Y" %} Crafted with ❤️ by Josam Eneza Mmbuji.</p>
+        <div class="social-links mt-2">
+            <a href="https://github.com/josam-mm" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="https://linkedin.com/in/josam-mm" target="_blank"><i class="fab fa-linkedin"></i></a>
+            <a href="https://twitter.com/josam_mm" target="_blank"><i class="fab fa-twitter"></i></a>
+        </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Dark Mode Toggle
         const darkModeToggle = document.getElementById('darkModeToggle');
         const body = document.body;
 
         darkModeToggle.addEventListener('click', () => {
             body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', body.classList.contains('dark-mode') ? 'enabled' : 'disabled');
         });
 
+        // Load Dark Mode Preference
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            body.classList.add('dark-mode');
+        }
+
+        // Notifications
         function showNotification(message, type = 'info') {
             const container = document.getElementById('notification-container');
             const notification = document.createElement('div');
@@ -145,7 +254,8 @@
             setTimeout(() => notification.remove(), 5000);
         }
 
-        const sessionTimeout = {{ request.session.get_expiry_age }} * 1000;
+        // Session Timeout Handling
+        const sessionTimeout = {{ request.session.get_expiry_age|default:1800 }} * 1000;
         const warningTime = 30000;
         let timeoutWarningShown = false;
 
@@ -159,11 +269,48 @@
         setTimeout(showTimeoutWarning, sessionTimeout - warningTime);
 
         function resetSessionTimer() {
-            fetch('/tasks/extend_session/', { method: 'POST', credentials: 'same-origin' });
+            fetch('/tasks/extend_session/', { 
+                method: 'POST', 
+                credentials: 'same-origin',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            });
         }
 
         document.addEventListener('mousemove', resetSessionTimer);
         document.addEventListener('keypress', resetSessionTimer);
+
+        // Narrator for Navigation
+        document.getElementById('readNav').addEventListener('click', function() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            let narrationText = 'Navigation: ';
+            navLinks.forEach((link, index) => {
+                narrationText += link.innerText + (index < navLinks.length - 1 ? ', ' : '. ');
+            });
+            {% if user.is_authenticated %}
+                narrationText += 'You are logged in as {{ user.username }}.';
+            {% else %}
+                narrationText += 'You are not logged in. Please login or register.';
+            {% endif %}
+
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const speech = new SpeechSynthesisUtterance(narrationText);
+                speech.lang = "en-US";
+                speech.rate = 1.0;
+                speech.pitch = 1.0;
+                const voices = window.speechSynthesis.getVoices();
+                speech.voice = voices.find(voice => voice.lang === "en-US") || voices[0];
+                window.speechSynthesis.speak(speech);
+            } else {
+                alert("Text-to-Speech is not supported in this browser.");
+            }
+        });
+
+        window.speechSynthesis.onvoiceschanged = function() {
+            const voices = window.speechSynthesis.getVoices();
+        };
     </script>
 </body>
 </html>
